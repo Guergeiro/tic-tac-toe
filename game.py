@@ -5,10 +5,15 @@ def print_game(game):
 		print(i,"[",row[0],"][", row[1],"][", row[2],"]")
 		i+=1
 
+def checker(thing):
+	if thing.count(thing[0]) == len(thing) and thing[0] != " ":
+		return True
+	return False
+
 def game_finished(game):
 	# Vencedor linhas
 	for row in game:
-		if row.count(row[0]) == len(row) and row[0] != " ":
+		if checker(row):
 			print("ROW")
 			return True
 	
@@ -17,7 +22,7 @@ def game_finished(game):
 		columns = []
 		for row in game:
 			columns.append(row[i])
-		if columns.count(columns[0]) == len(columns) and columns[0] != " ":
+		if checker(columns):
 			print("COL")
 			return True
 
@@ -26,34 +31,46 @@ def game_finished(game):
 	diags = []
 	for i in range(len(game)):
 		diags.append(game[i][i])
-	if diags.count(diags[0]) == len(diags) and diags[0] != " ":
+	if checker(diags):
 		print("DIAG1")
 		return True
 	#Diagonal Dir->Esq
 	diags = []
 	for i in range(len(game)):
 		diags.append(game[i][len(game)-1-i])
-	if diags.count(diags[0]) == len(diags) and diags[0] != " ":
+	if checker(diags):
 		print("DIAG2")
 		return True	
 	return False
 
-def play(game, optionX, optionY, player):
-	if (optionX, optionY) < 1 or (optionX,optionY) > len(game) 
+def play(game, optionX=0, optionY=0, player=" "):
+	options = [1,2,3]
+	# Not in range of list
+	if ((optionX not in options) or (optionY not in options)):
+		return True
+	# Spot already taken
+	elif game[optionX-1][optionY-1] != " ":
 		return True
 
-	game[optionX][optionY] = player
+	game[optionX-1][optionY-1] = player
 	return False
 
 def main(game):
 	players = ["X","O"]
+	i = 0
 	while (game_finished(game) == False):
 		print_game(game)
-		optionX
-		optionY
-		while(play(game,optionX , optionY, player)):
-			optionX = input("X: ")
-			optionY = input("Y: ")
+		print("Player: ", players[i])
+		optionX = input("X: ")
+		optionY = input("Y: ")
+		result = play(game, int(optionX), int(optionY), players[i])
+		if result==True:
+			print("Play again")
+			continue
+		if i == 0:
+			i = 1
+		else:
+			i = 0
 
-game = [["X"," ","X"],[" "," "," "],["X"," "," "]]
+game = [[" "," "," "],[" "," "," "],[" "," "," "]]
 main(game)
